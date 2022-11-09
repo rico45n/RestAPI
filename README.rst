@@ -13,10 +13,3 @@ REST-сервис для списка задач
 При первом запуске в конфиге "application.properties" нужно:
     -Указать свою БД , логин , и пароль
     -Изменить "spring.jpa.generate-ddl=false" на "true" для генерации таблиц из entity.
-
-Быстрые ссылки:
-    -Показать все задачи(запрос GET): localhost:8080/TaskList/AllTask
-    -Добавить задачу(запрос POST): localhost:8080/TaskList/AddTask
-    -Показать определенную задачу(запрос GET): localhost:8080/TaskList/ReadTask/{taskListId}
-    -Удалить задачу (запрос DELETE): localhost:8080/TaskList/DeleteTask/{taskListId}
-    -Просмотр спискана сегодня/неделю/месяц с фильтрацией выполнения (запрос GET) localhost:8080/TaskList/TaskInterval
