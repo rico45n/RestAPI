@@ -5,9 +5,9 @@ import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -31,7 +31,6 @@ public class TaskListDomain {
 
     @NotNull
     private Boolean isOpen;
-
 
 
     @Override
