@@ -7,23 +7,33 @@ import com.example.project.enums.TimeInterval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping(value = "/TaskList/")
+@RequestMapping(value = "/TaskList")
 public class TaskListController {
     @Autowired
     private TaskListRepository taskListRepository;
 
-    //Список всех задач
-    @RequestMapping(value = "/AllTask", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<TaskListDomain> findAll() {
-        return taskListRepository.findAll();
+    //Просмотр списка задач , с выбором на сегодня/неделю/месяц с фильтрацией по выполнению
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<TaskListDomain> findAll(@RequestParam(value = "taskInterval", required = false) TimeInterval taskInterval, @RequestParam(required = false) Boolean bool) {
+        LocalDate date = null;
+        if (TimeInterval.DAY.equals(taskInterval)) {
+            date = LocalDate.now();
+        } else if (TimeInterval.WEEK.equals(taskInterval)) {
+            date = LocalDate.now().minusDays(7);
+        } else if (TimeInterval.MONTH.equals(taskInterval)) {
+            date = LocalDate.now().minusMonths(1);
+        }
+        if (date == null) {
+            return taskListRepository.faindByIsOpen(bool);
+        } else {
+            return taskListRepository.faindByDateteCreateAndIsOpen(date, bool);
+        }
     }
 
     //Добавить задачу
@@ -52,26 +62,5 @@ public class TaskListController {
         taskListRepository.deleteById(obj);
 
     }
-
-    //Просмотр списка задач на сегодня/неделю/месяц с фильтрацией по выполнению
-    @RequestMapping(value = "/TaskInterval", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<TaskListDomain> TaskInterval(@RequestParam("taskInterval") TimeInterval taskInterval, @RequestParam(required = false) Boolean bool) {
-
-        LocalDate date = null;
-        if (TimeInterval.DAY.equals(taskInterval)) {
-            date = LocalDate.now();
-        } else if (TimeInterval.WEEK.equals(taskInterval)) {
-            date = LocalDate.now().minusDays(7);
-        } else if (TimeInterval.MONTH.equals(taskInterval)) {
-            date = LocalDate.now().minusMonths(1);
-        }
-        if (date == null) {
-            return taskListRepository.findAll(bool);
-        } else {
-            return taskListRepository.interval(date, bool);
-        }
-
-    }
-
 
 }
